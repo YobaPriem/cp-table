@@ -26,14 +26,17 @@ const useStyles = makeStyles({
     },
 })
 
-const tableHead = (data: Data) => {
-    if (data !== undefined) {
-        return Object.keys(data)
-        .map(row => (
-            <TableCell key={row}>{row}</TableCell>
-        ))
-    }
-}
+// const tableHead = (data: Data, callback: any) => {
+//     if (data !== undefined) {
+//         return Object.keys(data)
+//         .map(row => (
+//             <TableCell
+//             key={row}
+//             onClick={callback(row)}
+//             >{row}</TableCell>
+//         ))
+//     }
+// }
 
 const Table = (props: {dataSet: Data[]}) => {
     const classes = useStyles()
@@ -50,7 +53,19 @@ const Table = (props: {dataSet: Data[]}) => {
                 <TableBlock aria-label="customized table">
                     <TableHead>
                         <TableRow>
-                            {tableHead(props.dataSet[0])}
+                            {/* {tableHead(props.dataSet[0], (s: string) => setSettings(s))} */}
+                            {
+                                props.dataSet[0] !== undefined &&
+                                    Object.keys(props.dataSet[0])
+                                    .map(row => (
+                                        <TableCell
+                                        key={row}
+                                        onClick={
+                                            ()=>setSettings(row)
+                                        }
+                                        >{row}</TableCell>
+                                    ))
+                            }
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -58,8 +73,8 @@ const Table = (props: {dataSet: Data[]}) => {
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map(row => (
                                 <TableRow key={row.id}>
-                                    <TableCell>{row.id}</TableCell>
                                     <TableCell>{row.userId}</TableCell>
+                                    <TableCell>{row.id}</TableCell>
                                     <TableCell>{row.title}</TableCell>
                                     <TableCell>{row.body}</TableCell>
                                 </TableRow>
