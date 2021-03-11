@@ -1,14 +1,17 @@
-import React, {useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 import useRequest from '../hooks/request'
+import Table from '../components/Table'
 
 export const TablePage = () => {
     const { request, loading } = useRequest()
+    const [data, setData] = useState([])
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const data = await request('https://jsonplaceholder.typicode.com/posts')
                 console.log(data)
+                setData(data)
             } catch (e) {
                 console.log(e)
             }
@@ -18,8 +21,9 @@ export const TablePage = () => {
 
     return (
         <div>
-            <h1>1231231</h1>
-            {/* <button onClick={handel}></button> */}
+            <Table
+            dataSet={data}
+            />
         </div>
     )
 }
