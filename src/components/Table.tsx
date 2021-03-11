@@ -30,15 +30,12 @@ const tableHead = (data: Data) => {
     if (data !== undefined) {
         return Object.keys(data)
         .map(row => (
-            <>
-                <TableCell>{row}</TableCell>
-            </>
+            <TableCell key={row}>{row}</TableCell>
         ))
     }
 }
 
 const Table = (props: {dataSet: Data[]}) => {
-    console.log(props.dataSet)
     const classes = useStyles()
     const [page, setPage] = React.useState(0)
     const { sortedItems, sortSettings, setSettings } = useSort(props.dataSet)
@@ -51,7 +48,7 @@ const Table = (props: {dataSet: Data[]}) => {
         <Paper>
             <TableContainer className={classes.container} component={Paper}>
                 <TableBlock aria-label="customized table">
-                    <TableHead key='head'>
+                    <TableHead>
                         <TableRow>
                             {tableHead(props.dataSet[0])}
                         </TableRow>

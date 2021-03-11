@@ -21,9 +21,7 @@ const useRequest = () => {
         } catch (e) {
             throw e
         } finally {
-            setTimeout(() => {
-                setLoading(false)
-            }, 1000)
+            setLoading(false)
         }
     }, [])
     return { request, loading }
