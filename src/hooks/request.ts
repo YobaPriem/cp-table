@@ -1,9 +1,9 @@
-import {useState, useCallback} from 'react'
+import React from 'react'
 
 const useRequest = () => {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = React.useState(false)
 
-    const request = useCallback(async (url: string) => {
+    const request = React.useCallback(async (url: string) => {
         setLoading(true)
         try {
 
@@ -21,7 +21,9 @@ const useRequest = () => {
         } catch (e) {
             throw e
         } finally {
-            setLoading(false)
+            setTimeout(() => {
+                setLoading(false)
+            }, 1000)
         }
     }, [])
     return { request, loading }
