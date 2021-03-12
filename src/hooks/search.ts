@@ -5,7 +5,6 @@ interface Data {
 }
 
 const useSearch = (items: Data[]) => {
-    // const [originalData, setOriginalData] = React.useState(null)
     const [searchedItems, setSearchedItems] = React.useState([] as any)
     const [searchQuery, setSearchQuery] = React.useState('')
 
