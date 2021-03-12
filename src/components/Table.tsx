@@ -6,6 +6,7 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TablePagination from '@material-ui/core/TablePagination'
+import Pagination from '@material-ui/lab/Pagination'
 import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import TextField from '@material-ui/core/TextField'
@@ -28,29 +29,23 @@ const useStyles = makeStyles({
     },
     tableSearch: {
         margin: 16,
+    },
+    pagination: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        padding: '15px 0'
     }
 })
-
-// const tableHead = (data: Data, callback: any) => {
-//     if (data !== undefined) {
-//         return Object.keys(data)
-//         .map(row => (
-//             <TableCell
-//             key={row}
-//             onClick={callback(row)}
-//             >{row}</TableCell>
-//         ))
-//     }
-// }
 
 const Table = (props: {dataSet: Data[]}) => {
     const classes = useStyles()
     const [page, setPage] = React.useState(0)
-    const { sortedItems, sortSettings, setSettings } = useSort(props.dataSet)
-    const { searchedItems, setSearchQuery } = useSearch(sortedItems)
+    const { searchedItems, setSearchQuery } = useSearch(props.dataSet)
+    const { sortedItems, sortSettings, setSettings } = useSort(searchedItems)
 
     const handleChangePage = (event: unknown, newPage: number) => {
-      setPage(newPage);
+        setPage(newPage - 1);
     }
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,10 +59,9 @@ const Table = (props: {dataSet: Data[]}) => {
                 <TableBlock aria-label="customized table">
                     <TableHead>
                         <TableRow>
-                            {/* {tableHead(props.dataSet[0], (s: string) => setSettings(s))} */}
                             {
-                                props.dataSet[0] !== undefined &&
-                                    Object.keys(props.dataSet[0])
+                                sortedItems[0] !== undefined &&
+                                    Object.keys(sortedItems[0])
                                     .map(row => (
                                         <TableCell
                                         key={row}
@@ -87,7 +81,7 @@ const Table = (props: {dataSet: Data[]}) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {searchedItems
+                        {sortedItems
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row: Data) => (
                                 <TableRow key={row.id}>
@@ -101,13 +95,11 @@ const Table = (props: {dataSet: Data[]}) => {
                     </TableBody>
                 </TableBlock>
             </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[]}
-                component="div"
-                count={searchedItems.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
+            <Pagination
+                className={classes.pagination}
+                count={Math.ceil(sortedItems.length / rowsPerPage)}
+                shape="rounded"
+                onChange={handleChangePage}
             />
         </Paper>
     )
