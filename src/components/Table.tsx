@@ -8,8 +8,10 @@ import TableHead from '@material-ui/core/TableHead'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
+import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper'
 import useSort from '../hooks/sort'
+import useSearch from '../hooks/search'
 
 const rowsPerPage: number = 50
 
@@ -24,6 +26,9 @@ const useStyles = makeStyles({
     container: {
       maxHeight: 700,
     },
+    tableSearch: {
+        margin: 16,
+    }
 })
 
 // const tableHead = (data: Data, callback: any) => {
@@ -42,13 +47,19 @@ const Table = (props: {dataSet: Data[]}) => {
     const classes = useStyles()
     const [page, setPage] = React.useState(0)
     const { sortedItems, sortSettings, setSettings } = useSort(props.dataSet)
+    const { searchedItems, setSearchQuery } = useSearch(sortedItems)
 
     const handleChangePage = (event: unknown, newPage: number) => {
       setPage(newPage);
     }
 
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(event.target.value)
+    }
+
     return (
         <Paper>
+            <TextField className={classes.tableSearch} id="search" label="Поиск" onChange={handleSearch}/>
             <TableContainer className={classes.container} component={Paper}>
                 <TableBlock aria-label="customized table">
                     <TableHead>
@@ -69,17 +80,16 @@ const Table = (props: {dataSet: Data[]}) => {
                                             <TableSortLabel
                                                 active={sortSettings.key === row}
                                                 direction={sortSettings.key === row ? sortSettings.direction  : 'asc'}
-                                            ></TableSortLabel>
-                                            {row}
+                                            >{row}</TableSortLabel>
                                         </TableCell>
                                     ))
                             }
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sortedItems
+                        {searchedItems
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map(row => (
+                            .map((row: Data) => (
                                 <TableRow key={row.id}>
                                     <TableCell>{row.userId}</TableCell>
                                     <TableCell>{row.id}</TableCell>
@@ -94,7 +104,7 @@ const Table = (props: {dataSet: Data[]}) => {
             <TablePagination
                 rowsPerPageOptions={[]}
                 component="div"
-                count={props.dataSet.length}
+                count={searchedItems.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
